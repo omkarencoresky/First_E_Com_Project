@@ -1,0 +1,140 @@
+{% extends "master.html" %}
+{% load static %}
+{% block body %}
+    <div class="meassage">
+        {{msg}}
+    </div>
+
+    <!-- Product List Start -->
+    <div class="product-view">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="product-search">
+                                        <input type="email" value="Search">
+                                        <button><i class="fa fa-search"></i></button>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="product-short">
+                                        <div class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Product short by</a>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <a href="#" class="dropdown-item">Newest</a>
+                                                <a href="#" class="dropdown-item">Popular</a>
+                                            </div>  
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% for product in product_list%}
+                        <div class="col-lg-4">
+                            <div class="product-item">
+                                <div class="product-image">
+                                    <a href="{{curl}}/product_detail/{{product.slug}}">
+                                        <img src='{{curl}}/media/{{product.image}}' alt="Product Image">
+                                    </a>
+                                    <div class="product-action">
+                                        <a href="{{curl}}/add_to_cart/{{product.id}}"><i class="fa fa-cart-plus"></i></a>
+                                        <a href="{{curl}}/wishlist_items/{{product.id}}"><i class="fa fa-heart"></i></a>
+                                        {% comment %} <a href="#"><i class="fa fa-search"></i></a> {% endcomment %}
+                                    </div>
+                                </div>
+                                <div class="product-content">
+                                    <div class="title"><a href="#">{{product.product_name}}</a></div>
+                                    <div class="ratting">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                    </div>
+                                    <div class="price">${{product.price}}<span>${{product.old_price}}</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div>
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-center">
+                                {% if product_list.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ product_list.previous_page_number }}">Previous</a>
+                                    </li>
+                                {% endif %}
+                                {% for num in product_list.paginator.page_range %}
+                                    <li class="page-item {% if product_list.number == num %}active{% endif %}">
+                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                    </li>
+                                {% endfor %}
+                                {% if product_list.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ product_list.next_page_number }}">Next</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-3">
+                    <div class="sidebar-widget category">
+                        <h2 class="title">Category</h2>
+                        <ul>
+                            <li><a href="#">Lorem Ipsum</a><span>(83)</span></li>
+                            <li><a href="#">Cras sagittis</a><span>(198)</span></li>
+                            <li><a href="#">Vivamus</a><span>(95)</span></li>
+                            <li><a href="#">Fusce vitae</a><span>(48)</span></li>
+                            <li><a href="#">Vestibulum</a><span>(210)</span></li>
+                            <li><a href="#">Proin phar</a><span>(78)</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="sidebar-widget image">
+                        <h2 class="title">Featured Product</h2>
+                        <a href="#">
+                            <img src="{% static 'img/category-1.jpg' %}" alt="Image">
+                        </a>
+                    </div>
+
+                    <div class="sidebar-widget brands">
+                        <h2 class="title">Our Brands</h2>
+                        <ul>
+                            <li><a href="#">Nulla </a><span>(45)</span></li>
+                            <li><a href="#">Curabitur </a><span>(34)</span></li>
+                            <li><a href="#">Nunc </a><span>(67)</span></li>
+                            <li><a href="#">Ullamcorper</a><span>(74)</span></li>
+                            <li><a href="#">Fusce </a><span>(89)</span></li>
+                            <li><a href="#">Sagittis</a><span>(28)</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="sidebar-widget tag">
+                        <h2 class="title">Tags Cloud</h2>
+                        <a href="#">Lorem ipsum</a>
+                        <a href="#">Vivamus</a>
+                        <a href="#">Sem quis</a>
+                        <a href="#">Mollis metus</a>
+                        <a href="#">Vel posuere</a>
+                        <a href="#">Nam lorem</a>
+                        <a href="#">Curabitur</a>
+                        <a href="#">Fusce</a>
+                        <a href="#">Sit amet</a>
+                        <a href="#">Phasellus</a>
+                        <a href="#">pulvinar</a>
+                        <a href="#">orci luctus</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Product List End -->
+{% endblock %}

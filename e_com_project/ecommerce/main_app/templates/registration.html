@@ -1,0 +1,59 @@
+{% extends "master.html" %}
+{% load static %}
+{% block body %}
+    <!-- meassage Start -->
+
+    <div>
+        {% if messages %}   <!-- This if checks the messages is not empty-->
+        <ul class="messages">
+            {% for message in messages %}
+            {% comment %} <li style="color: #3F69AA; list-style:none;">{{ message }}</li> {% endcomment %}
+            <li style="color: red; list-style:none;">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    <!-- meassage End -->
+    <!-- Login Start -->
+    <div class="login">
+        <div class="container">
+            <div class="section-header">
+                <h3>User Registration</h3>
+                <label style="color: red; padding-left: 30px;" for="meassage">{{msg}}</label>
+            </div>
+                <div class="col-md-10">
+                    <div class="register-form" style="padding-left:180px;">
+                        <form method="POST" action="{% url 'register' %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="id_username">Username:</label>
+                                <input type="text" id="id_username" name="username" class="form-control">
+                                <span class="text-danger">{{ form.username.errors }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_email">Email:</label>
+                                <input type="email" id="id_email" name="email" class="form-control" >
+                                <span class="text-danger">{{ form.email.errors }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_password1">Password:</label>
+                                <input type="password" id="id_password1" name="password1" class="form-control" >
+                                <span class="text-danger">{{ form.password1.errors }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_password2">Confirm Password:</label>
+                                <input type="password" id="id_password2" name="password2" class="form-control" >
+                                <span class="text-danger">{{ form.password2.errors }}</span>
+                            </div>
+                            <div style="text-align:center;">
+                                <button type="submit" class="btn btn-dark" style="border:1px solid black; border-radius:6px; margin-left:165px;">Register</button>
+                                <lable style="margin-left:20px; font-size:16.5px">Click here for <a href="{{curl}}/user_login/" class="" >Login</a></lable>
+                            </div>
+                        </form>                                                
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Login End -->
+{% endblock %}

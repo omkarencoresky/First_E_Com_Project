@@ -1,0 +1,62 @@
+{% extends "master.html" %}
+{% load static %}
+{% block body %}
+    <!-- meassage Start -->
+
+    <div>
+        {% if messages %}   <!-- This if checks the messages is not empty-->
+        <ul class="messages">
+            {% for message in messages %}
+            <li style="color: green; list-style:none;">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    <!-- meassage End -->
+    <!-- Wishlist Start -->
+    <div class="cart-page">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    {% comment %} <th>Quantity</th> {% endcomment %}
+                                    <th>Add to Cart</th>
+                                    <th>Remove</th>
+                                </tr>
+                            </thead>
+                            <tbody class="align-middle">
+                                {% if data %} 
+                                    {% for item in data %}
+                                    <tr>
+                                        <td><a href="{{curl}}/product_detail/{{item.product.slug}}"><img src='{{curl}}/media/{{item.product.image}}' alt="Image"></a></td>
+                                        <td>{{ item.product.product_name}}</td>
+                                        <td>${{item.product.price}}</td>
+                                    {% comment %} <td>
+                                            <div class="qty">
+                                                <button class="btn-minus"><i class="fa fa-minus"></i></button>
+                                                <input type="text" value="1">
+                                                <button class="btn-plus"><i class="fa fa-plus"></i></button>
+                                            </div> 
+                                        </td>{% endcomment %}
+                                        <td><a href="{{curl}}/add_to_cart/{{item.product.id}}"><i class="fa fa-cart-plus" style="font-size:40px;"></i></a></td>
+                                        <td><a href="{{curl}}/wishlist_item_delete/{{ item.product.id }}" class="btn-delete" style="font-size:40px;"><i class="fa fa-trash"></i></a></td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <marquee behavior="alternate" direction="right" style="font-weight:bold;"> No items into the wish-list, Create your wish-list now</marquee>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Wishlist End -->
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "master.html" %}
+{% load static %}
+{% block body %}
+    <!-- Login Start -->
+    <div class="login">
+        <div class="container" style="padding-left:230px">
+            <div class="section-header" style="padding-right:200px;">
+                <div class="col-md-20">
+                    <h3 style="padding-right:0px;">User Login</h3>
+                    {% comment %} <label for="meassage" style="padding-left:30px; color:red;">{{msg}}</label> {% endcomment %}
+                    <div class="col-md-14">
+                        <div>
+                            {% if messages %}   <!-- This if checks the messages is not empty-->
+                            <ul class="messages">
+                                {% for message in messages %}
+                                <li style="color: green; list-style:none; padding-left:45px;">{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </div>
+                        <form method="POST" action="{% url 'user_login' %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="id_username">Username:</label>
+                                <input type="text" id="id_username" name="username" class="form-control">
+                                <span class="text-danger">{{ form.username.errors }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_password1">Password:</label>
+                                <input type="password" id="id_password1" name="password" class="form-control">
+                                <span class="text-danger">{{ form.password.errors }}</span>
+                            </div>
+                            <div style="text-align:center;">
+                                <button type="submit" class="btn btn-dark" style="border:1px solid black; border-radius:6px; margin-left:210px;">Login</button>
+                                <lable style="margin-left:5px; font-size:16.5px">Click here for <a href="{{curl}}/register/" class="" >Registeration</a></lable>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Login End -->
+{% endblock %}
+
+
+   

@@ -1,0 +1,186 @@
+{% extends "master.html" %}
+{% load static %}
+
+{% block body %}
+        <!-- Meassage Start -->
+        <div class="breadcrumb-wrap">
+            <div  >
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li style="color: green; list-style:None;">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        <!-- Meassage End -->
+
+
+    <!-- Cart Start -->
+    <div class="cart-page">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <marquee behavior="alternate" direction="right" scrollamount="5">Don't forget to "update/save" your cart after making 
+                                any changes......!</marquee>
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th>Remove</th>
+                                    <th>Save updates</th>
+                                </tr>
+                            </thead>
+                            <tbody class="align-middle">
+                                {% for detail in data %}
+                                {% comment %} <tr class="cart-item">
+                                    <td><img src="{{curl}}/media/{{detail.image}}" alt="Image"></td>
+                                    <td>{{detail.product_name}}</td>
+                                    <td class="product-price">${{detail.product_price}}</td>
+                                    <td>
+                                        <div class="qty">
+                                            <button class="btn-minus"><i class="fa fa-minus"></i></button>
+                                            <input type="text" readonly class="quantity" value="{{ detail.quantity }}" min="1">
+                                            <button class="btn-plus"><i class="fa fa-plus"></i></button>
+                                        </div>
+                                    </td>                                    
+                                    <td class="subtotal">$</td>
+                                    <td><a href="{{curl}}/delete_item/{{detail.product_id}}" class="btn-delete"><i class="fa fa-trash"></i></a></td>
+                                    <td><a href="{{curl}}/update_cart_item/{{detail.product_id}}" class="btn-save"><i class="fa fa-save"></i></a></td>
+                                </tr> {% endcomment %}
+                                <tr class="cart-item">
+                                    <td><img src="{{curl}}/media/{{detail.image}}" alt="Image"></td>
+                                    <td>{{detail.product_name}}</td>
+                                    <td class="product-price">${{detail.price}}</td>
+                                    <td>
+                                        <form method="POST" action="{{curl}}/update_cart_item/{{detail.product_id}}">
+                                            {% csrf_token %}
+                                            <div class="qty">
+                                                <button type="button" class="btn-minus"><i class="fa fa-minus"></i></button>
+                                                <input type="number" readonly class="quantity" name="quantity" value="{{ detail.quantity }}" min="1">
+                                                <button type="button" class="btn-plus"><i class="fa fa-plus"></i></button>
+                                            </div>
+                                            <td class="subtotal" name='total_itme_price'>${{ detail.total_item_price }}</td>
+                                            <td ><a href="{{curl}}/delete_item/{{detail.product_id}}" class="btn-delete"><i class="fa fa-trash"></i></a></td>
+                                            <td>
+                                                <button type="submit" class="btn-save"><i class="fa fa-save"></i> Save</button>
+                                            </td>
+                                        </form>
+                                    </td>                                    
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="coupon">
+                        <input type="text" placeholder="Coupon Code">
+                        <button>Apply Code</button>
+                    </div>
+                </div>  
+                <div class="col-md-6">
+                    <div class="cart-summary">
+                        <div class="cart-content">
+                            <h3>Cart Summary</h3>
+                            <p>Sub Total<span id="sub-total">$22</span></p>
+                            {% comment %} <p>Shipping Cost<span>$10</span></p> {% endcomment %}
+                            <h4>Grand Total<span id="grand-total">$23</span></h4>
+                        </div>
+                        <div class="cart-btn" style="text-align:center; padding:20px">
+                            {% comment %} <button id="update-cart">Update Cart</button> {% endcomment %}
+                            <a class="btn-save" style="text-align:center;padding:10px;border-radius:10px; background-color:#3F69AA; 
+                                color:white; font-weight:bold;"href="{{curl}}/checkout/" >Checkout</a>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const cartItems = document.querySelectorAll(".cart-item");
+            const subtotalElement = document.getElementById("sub-total");
+            const grandTotalElement = document.getElementById("grand-total");
+        
+            let subtotal = 0;
+        
+            function updateItemTotal(item) {
+                const quantityInput = item.querySelector(".quantity");
+                const priceElement = item.querySelector(".product-price");
+                const itemTotalElement = item.querySelector(".subtotal");
+        
+                const quantity = parseInt(quantityInput.value);
+                const price = parseFloat(priceElement.textContent.replace("$", ""));
+                const itemTotal = quantity * price;
+                itemTotalElement.textContent = `$${itemTotal.toFixed(1)}`;
+        
+                return itemTotal;
+            }
+        
+            function updateGrandTotal() {
+                const shippingCharge = 0; // Example shipping charge
+                const grandTotal = subtotal + shippingCharge;
+                grandTotalElement.textContent = `$${grandTotal.toFixed(2)}`;
+            }
+        
+            function updateTotals() {
+                subtotal = 0;
+        
+                cartItems.forEach(item => {
+                    const updatedItemTotal = updateItemTotal(item);
+                    subtotal += updatedItemTotal;
+                });
+        
+                subtotalElement.textContent = `$${subtotal.toFixed(2)}`;
+                updateGrandTotal();
+            }
+        
+            cartItems.forEach(item => {
+                const deleteButton = item.querySelector(".btn-delete");
+                const quantityInput = item.querySelector(".quantity");
+                const btnPlus = item.querySelector(".btn-plus");
+                const btnMinus = item.querySelector(".btn-minus");
+        
+                deleteButton.addEventListener("click", function () {
+                    item.remove();
+                    updateTotals();
+                });
+        
+                btnPlus.addEventListener("click", function () {
+                    const currentValue = parseInt(quantityInput.value);
+                    quantityInput.value = currentValue + 0;
+                    updateTotals();
+                });
+        
+                btnMinus.addEventListener("click", function () {
+                    const currentValue = parseInt(quantityInput.value);
+                    if (currentValue > 1) {
+                        quantityInput.value = currentValue - 0;
+                        updateTotals();
+                    }
+                });
+        
+                quantityInput.addEventListener("input", function () {
+                    const currentValue = parseInt(quantityInput.value);
+                    if (currentValue < 1 || isNaN(currentValue)) {
+                        quantityInput.value = 1;
+                    }
+                    updateTotals();
+                });
+            });
+        
+            updateTotals();
+        });
+
+    </script>
+    <!-- Cart End -->
+{% endblock %}
